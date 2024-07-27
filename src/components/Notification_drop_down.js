@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -7,165 +7,44 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
-function Notification_drop_down() {
+function Notification_drop_down({ notifications }) {
   return (
-   <List sx={{ width: '100%', maxWidth: 360, bgcolor: '#FAF2F2' ,maxHeight: 300, overflowY: 'auto'}}>
-    <ListItem alignItems="flex-start" sx={{backgroundColor:'#E8F5B0'}}>
-      <ListItemAvatar>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Brunch this weekend?"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              Ali Connors
-            </Typography>
-            {" — I'll be in your neighborhood doing errands this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Summer BBQ"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              to Scott, Alex, Jennifer
-            </Typography>
-            {" — Wish I could come, but I'm out of town this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Summer BBQ"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              to Scott, Alex, Jennifer
-            </Typography>
-            {" — Wish I could come, but I'm out of town this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Summer BBQ"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              to Scott, Alex, Jennifer
-            </Typography>
-            {" — Wish I could come, but I'm out of town this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Summer BBQ"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              to Scott, Alex, Jennifer
-            </Typography>
-            {" — Wish I could come, but I'm out of town this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Summer BBQ"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              to Scott, Alex, Jennifer
-            </Typography>
-            {" — Wish I could come, but I'm out of town this…"}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-    <Divider variant="inset" component="li" />
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar>
-        <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-      </ListItemAvatar>
-      <ListItemText
-        primary="Oui Oui"
-        secondary={
-          <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="text.primary"
-            >
-              Sandra Adams
-            </Typography>
-            {' — Do you have Paris recommendations? Have you ever…'}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
-  </List>
-
-  )
+    <List sx={{ width: '100%', maxWidth: 360, bgcolor: '#FAF2F2', maxHeight: 300, overflowY: 'auto' }}>
+      {notifications && notifications.map((notification) => (
+        <Fragment key={notification._id}>
+          <ListItem alignItems="flex-start" sx={{ backgroundColor: notification.read ? '#E8F5B0' : '#FFC0CB' }}>
+            <ListItemAvatar>
+              <Avatar alt="Notification Icon" src="/static/images/avatar/1.jpg" />
+            </ListItemAvatar>
+            <ListItemText
+              primary={notification.type === 'message' ? 'Nouveau message' : 'Nouvelle invitation'}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: 'inline' }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {notification.content}
+                  </Typography>
+                  <Typography
+                    sx={{ display: 'block' }}
+                    component="span"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {new Date(notification.createdAt).toLocaleString()}
+                  </Typography>
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+          <Divider variant="inset" component="li" />
+        </Fragment>
+      ))}
+    </List>
+  );
 }
 
-export default Notification_drop_down
+export default Notification_drop_down;

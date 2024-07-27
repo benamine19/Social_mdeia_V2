@@ -4,6 +4,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import { grey } from '@mui/material/colors';
+import _ from 'lodash';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -37,18 +38,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchInput() {
+export default function SearchInput({setSearchTerm }) {
+
+  const debouncedSearch = React.useCallback(
+    _.debounce((query) => {
+      setSearchTerm(query);
+    }, 2000), // 300 ms de délai, ajustez selon vos besoins
+    []
+  );
+
+  const handleSearchChange = (event) => {
+    debouncedSearch(event.target.value);
+  };
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ 'aria-label': 'search' }}
-        />
-      </Search>
+      <form>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={handleSearchChange}
+          />
+        </Search>
+      </form>
     </Box>
   );
 }

@@ -1,65 +1,63 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import React from 'react';
+import { Container, Box, Typography, TextField, Button, Avatar, CssBaseline, Grid,useMediaQuery, Link as MuiLink } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
+import { schemaLogin } from '../config/formConfig';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { LoginUser} from '../redux/slices/userSlice';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+const theme = createTheme();
 
-const defaultTheme = createTheme();
+function Login() {
+  const dispatch = useDispatch();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schemaLogin),
+    mode: 'onSubmit',
+  });
+  const { loading, loginError} = useSelector((state) => state.user);
+  const navigate = useNavigate()
 
-export default function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+  const onSubmit = ({ email, password }) => {
+    dispatch(LoginUser({ email, password })).then(result=>{
+      if(result.payload.message === 'Login success') {
+        // toast.success('Login successful!');
+        navigate('/')
+      }else{
+        toast.error(result.payload.message || 'Login failed');
+      }
     });
   };
+  const isMinWidth450 = useMediaQuery('(min-width:450px)');
+
 
   return (
-     <div style={{backgroundColor:'#E8F6F8',height:'100vh'}}>
-       <Container  component="main" maxWidth="xs">
-        <CssBaseline />
+  
+    <Container  sx={{height:'600px',order:'2',backgroundColor:'white', borderTopLeftRadius: '20px',borderTopRightRadius: '20px',  borderBottomLeftRadius:  '20px',borderBottomRightRadius:  '20px',width:isMinWidth450?'400px':'100%',marginTop:isMinWidth450?'40px':'10px'}}>
         <Box
           sx={{
-            // marginTop: 8,
-            paddingTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'start',
+            paddingTop:'12px'
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+        
+        <Typography variant="body2" sx={{marginLeft:'8px',fontFamily:'Zen Kaku Gothic Antique',fontWeight:'12.8',color:'#2856B4'}}>
+             LET'S GET YOU STARTED
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Typography component="h1" variant="h6" sx={{margin:'8px',fontFamily:'Zen Kaku Gothic Antique',fontWeight:'30px',color:'#2856B4'}}>
+          Sign in with your account 
+          </Typography>
+          
+          <Box sx={{marginLeft:'8px',width:'100%'}} component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+
             <TextField
               margin="normal"
               required
@@ -69,7 +67,30 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              {...register('email', { required: true })}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3A68C7', // Couleur de la bordure après le focus
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3A68C7', // Couleur de la bordure au survol
+                  },
+                  '& .Mui-focused': {
+                    borderColor: '#3A68C7', // Couleur de la bordure pour l'état initial aussi
+                  },
+                  borderColor: '#2856B4', // Couleur de la bordure initiale
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#3A68C7', // Couleur du texte du label après le focus
+                },
+              }}
             />
+            <Typography component="span" variant="subtitle2" sx={{ color: 'red' }}>
+              {errors.email?.message}
+              {errors.email && errors.email.message}
+
+            </Typography>
             <TextField
               margin="normal"
               required
@@ -79,35 +100,69 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              {...register('password', { required: true, minLength: 3 })}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3A68C7', // Couleur de la bordure après le focus
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3A68C7', // Couleur de la bordure au survol
+                  },
+                  '& .Mui-focused': {
+                    borderColor: '#3A68C7', // Couleur de la bordure pour l'état initial aussi
+                  },
+                  borderColor: '#2856B4', // Couleur de la bordure initiale
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#3A68C7', // Couleur du texte du label après le focus
+                },
+              }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+            <Typography component="span" variant="subtitle2" sx={{ color: 'red' }}>
+              {errors.password?.message}
+            </Typography>
+           {loginError ?  <Typography component="div" variant="subtitle2" sx={{ color: 'red' }}>
+              {loginError}
+            </Typography>: ''}
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '12px', marginBottom: '18px' }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: '30px',
+                  height: '56px',
+                  backgroundColor: '#3A68C7',
+                  '&:hover': {
+                    backgroundColor: '#3A68C7', // Couleur de fond au survol
+                  },
+                }}
+              >
+                Sign In
+              </Button>
+            )}
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+                 <MuiLink sx={{color:'#3A68C7'}} component={Link} to="/signup" variant="body2">
+                   {"Forgot password?"}
+                 </MuiLink>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+              <MuiLink sx={{color:'#3A68C7'}} component={Link} to="/signup" variant="body2">
+                   {"Don't have an account? Sign Up"}
+              </MuiLink>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
-  </div>
   );
 }
+
+export default Login;

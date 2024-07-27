@@ -6,15 +6,23 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-
-export default function Commentaire() {
+import { URL } from '../url';
+import { Box } from '@mui/material';
+export default function Commentaire({comment}) {
   return (
-      <ListItem alignItems="flex-start">
+      <ListItem key={comment._id} alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar  src={`${URL}/uploads/${comment.user.profilePicture}`} alt="Profile Picture" />
         </ListItemAvatar>
         <ListItemText
-          primary="Brunch this weekend?"
+          primary={
+            <Box >
+             {comment.user.username}
+            <Typography variant="body2" color="text.secondary">
+                  {comment.createdAt}
+            </Typography>
+            </Box>
+          }
           secondary={
             <React.Fragment>
               <Typography
@@ -23,10 +31,11 @@ export default function Commentaire() {
                 variant="body2"
                 color="text.primary"
               >
-                Ali Connors
+              {comment.content }
               </Typography>
-              {" — I'll be in your neighborhood doing errands this…"}
+              
             </React.Fragment>
+
           }
         />
       </ListItem>

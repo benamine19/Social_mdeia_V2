@@ -7,14 +7,15 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Commentaire from './Commentaire';
-export default function AlignItemsList() {
+export default function AlignItemsList({comments}) {
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <Commentaire/>
-      <Divider variant="inset" component="li" />
-      <Commentaire/>
-      <Divider variant="inset" component="li" />
-      <Commentaire/>
+       {comments && comments.map(comment => (
+        <React.Fragment>
+             <Commentaire comment={comment}/>    
+             <Divider variant="inset" component="li" />
+        </React.Fragment>
+     ))}
     </List>
   );
 }

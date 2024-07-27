@@ -8,21 +8,22 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Box, Container, Grid} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { URL } from '../url';
 
 
 
 
-function Message_lui() {
+function Message_lui({profilePicture,message,key}) {
   return (
-    <div>
+    <div key={key}>
     <ListItem>
                <Box sx={{display: 'flex',alignItems: 'center'}}>
                     <ListItemAvatar>
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                        <Avatar  src={`${URL}/uploads/${profilePicture}`} alt="Profile Picture" />
                     </ListItemAvatar>
-                     <Container sx={{ border: '1px solid #ccc', borderRadius: '24px', backgroundColor: '#EBE7E7' }}>
+                     <Container  sx={{ border: '1px solid #ccc', borderRadius: '24px', backgroundColor: '#EBE7E7' }}>
                             <Typography variant="subtitle2" gutterBottom>
-                                    subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+                                          {message.content}
                             </Typography>
                     </Container>
                </Box>
